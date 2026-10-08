@@ -1,0 +1,17 @@
+com\exam\controller\StudentController$SubmitReq.class
+com\exam\repo\ResultRepo.class
+com\exam\security\JwtFilter.class
+com\exam\model\User.class
+com\exam\controller\AuthController$RegisterReq.class
+com\exam\repo\ExamRepo.class
+com\exam\controller\AuthController$LoginReq.class
+com\exam\security\JwtUtil.class
+com\exam\security\SecurityConfig.class
+com\exam\repo\UserRepo.class
+com\exam\controller\AdminController.class
+com\exam\controller\StudentController.class
+com\exam\controller\AuthController.class
+com\exam\model\Exam.class
+com\exam\model\Question.class
+com\exam\OnlineExamApplication.class
+com\exam\model\Result.class
