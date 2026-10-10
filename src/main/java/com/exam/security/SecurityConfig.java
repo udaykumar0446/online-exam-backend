@@ -24,30 +24,20 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain chain(
-            HttpSecurity http,
-            JwtFilter jwt
-    ) throws Exception {
+    SecurityFilterChain chain(HttpSecurity http, JwtFilter jwt)
+            throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
-
             .cors(Customizer.withDefaults())
-
             .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-
             .exceptionHandling(exception ->
                 exception.authenticationEntryPoint(
-                    new HttpStatusEntryPoint(
-                        HttpStatus.UNAUTHORIZED
-                    )
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
                 )
             )
-
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
@@ -56,11 +46,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
             )
-
-            .addFilterBefore(
-                jwt,
-                UsernamePasswordAuthenticationFilter.class
-            );
+            .addFilterBefore(jwt, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -72,39 +58,21 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource(
-            @Value("${app.cors.origin}") String origin
-    ) {
+            @Value("${app.cors.origin}") String origin) {
 
         CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOrigins(
-            List.of(origin)
-        );
-
+        configuration.setAllowedOrigins(List.of(origin));
         configuration.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
         );
-
-        configuration.setAllowedHeaders(
-            List.of("*")
-        );
-
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();
 
-        source.registerCorsConfiguration(
-            "/**",
-            configuration
-        );
-
+        source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    PasswordEncoder encoderAlias() {
-        return passwordEncoder();
     }
 }
 ```
