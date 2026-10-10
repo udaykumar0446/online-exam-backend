@@ -1,5 +1,0 @@
--- Tables are created automatically by Hibernate (ddl-auto=update). Reference only:
--- users(id, name, email UNIQUE, password, role)
--- exam(id, title, duration_minutes, pass_percentage)
--- question(id, text, option_a..option_d, correct_option, marks, exam_id -> exam.id)
--- result(id, user_id, exam_id, student_name, exam_title, score, total_marks, percentage, passed, submitted_at)
