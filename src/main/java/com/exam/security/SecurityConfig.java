@@ -1,3 +1,4 @@
+```java
 package com.exam.security;
 
 import java.util.List;
@@ -23,27 +24,43 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain chain(HttpSecurity http, JwtFilter jwt) throws Exception {
+    SecurityFilterChain chain(
+            HttpSecurity http,
+            JwtFilter jwt
+    ) throws Exception {
 
         http
-            .csrf(c -> c.disable())
+            .csrf(csrf -> csrf.disable())
+
             .cors(Customizer.withDefaults())
-            .sessionManagement(s ->
-                s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .exceptionHandling(e ->
-                e.authenticationEntryPoint(
-                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
                 )
             )
-            .authorizeHttpRequests(a -> a
+
+            .exceptionHandling(exception ->
+                exception.authenticationEntryPoint(
+                    new HttpStatusEntryPoint(
+                        HttpStatus.UNAUTHORIZED
+                    )
+                )
+            )
+
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/error").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwt, UsernamePasswordAuthenticationFilter.class);
+
+            .addFilterBefore(
+                jwt,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
@@ -55,23 +72,39 @@ public class SecurityConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource(
-            @Value("${app.cors.origin}") String origin) {
+            @Value("${app.cors.origin}") String origin
+    ) {
 
-        CorsConfiguration c = new CorsConfiguration();
+        CorsConfiguration configuration = new CorsConfiguration();
 
-        c.setAllowedOrigins(List.of(origin));
+        configuration.setAllowedOrigins(
+            List.of(origin)
+        );
 
-        c.setAllowedMethods(
+        configuration.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
         );
 
-        c.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(
+            List.of("*")
+        );
 
-        UrlBasedCorsConfigurationSource s =
+        configuration.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();
 
-        s.registerCorsConfiguration("/**", c);
+        source.registerCorsConfiguration(
+            "/**",
+            configuration
+        );
 
-        return s;
+        return source;
+    }
+
+    @Bean
+    PasswordEncoder encoderAlias() {
+        return passwordEncoder();
     }
 }
+```
