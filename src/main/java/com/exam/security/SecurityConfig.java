@@ -1,4 +1,3 @@
-
 package com.exam.security;
 
 import java.util.List;
@@ -31,7 +30,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(
+                    SessionCreationPolicy.STATELESS
+                )
             )
             .exceptionHandling(exception ->
                 exception.authenticationEntryPoint(
@@ -46,7 +47,10 @@ public class SecurityConfig {
                 .requestMatchers("/api/student/**").hasRole("STUDENT")
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwt, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                jwt,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
@@ -61,18 +65,22 @@ public class SecurityConfig {
             @Value("${app.cors.origin}") String origin) {
 
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(List.of(origin));
+
         configuration.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
         );
+
         configuration.setAllowedHeaders(List.of("*"));
+
         configuration.setAllowCredentials(false);
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration("/**", configuration);
+
         return source;
     }
 }
-
