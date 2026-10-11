@@ -1,8 +1,8 @@
+
 package com.exam.security;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -61,20 +61,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(
-            @Value("${app.cors.origin}") String origin) {
+    CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(origin));
+        configuration.setAllowedOrigins(
+            List.of("https://online-exam-frontend-wces.vercel.app")
+        );
 
         configuration.setAllowedMethods(
             List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
         );
 
         configuration.setAllowedHeaders(List.of("*"));
-
         configuration.setAllowCredentials(false);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
             new UrlBasedCorsConfigurationSource();
